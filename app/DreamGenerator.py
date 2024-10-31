@@ -1,8 +1,12 @@
 from openai import OpenAI
 import argparse
+import os
+from dotenv import load_dotenv
+load_dotenv()
 
 client = OpenAI()
 NUM_OF_TOKENS = 150
+print(os.getenv("OPENAI_API_KEY"))
 # get the user input as the short description of the dream
 def main():
     parser = argparse.ArgumentParser()
@@ -31,7 +35,7 @@ def dream_enriched_story_generator(story:str) -> str:
     print(enriched_story)
     return enriched_story
 
-def dream_picture_generator(enriched_story:str):
+def dream_picture_generator(enriched_story:str) -> str:
     # print(enriched_story)
     response = client.images.generate(
         model="dall-e-3",
@@ -40,8 +44,9 @@ def dream_picture_generator(enriched_story:str):
         quality="standard",
         n=1
     )
-
-    print(response.data[0].url)
+    picture_url = response.data[0].url
+    # print(response.data[0].url)
+    return picture_url
 
 if __name__ == "__main__":
     main()
