@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from typing import Optional
 from DreamGenerator import dream_enriched_story_generator, dream_picture_generator
 from mangum import Mangum
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 handler = Mangum(app)
@@ -10,6 +11,14 @@ class StoryState:
         self.enriched_story: Optional[str] = None
 
 app.state.story_manager = StoryState()
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 @app.get("/generate_story")
