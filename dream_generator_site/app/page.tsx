@@ -1,5 +1,4 @@
 import Head from "next/head";
-import Image from "next/image";
 import Dream_generator_main from "@/components/dream_generator_main";
 
 export default function Home() {
