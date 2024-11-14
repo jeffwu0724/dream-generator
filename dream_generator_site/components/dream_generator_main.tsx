@@ -20,11 +20,13 @@ const Dream_generator_main: React.FC = () => {
 
   const onResult = (data: any) => {
     // console.log()
-    console.log(data.keyword)
+    console.log(data.keyword);
     setKeyword(data.keyword);
     setEnriched_stroy(data.enriched_story);
     // setPictureUrl(data.picture_url)
-    setPictureUrl("https://images.pexels.com/photos/20787/pexels-photo.jpg?auto=compress&cs=tinysrgb&h=350");
+    setPictureUrl(
+      "https://images.pexels.com/photos/20787/pexels-photo.jpg?auto=compress&cs=tinysrgb&h=350"
+    );
     setHasResult(true);
   };
 
@@ -39,7 +41,13 @@ const Dream_generator_main: React.FC = () => {
 
   if (hasResult) {
     displayedElement = (
-      <Results enriched_story={enriched_story} onBack={onBack} story={story} keyword={keyword} picture_url={picture_url}/>
+      <Results
+        enriched_story={enriched_story}
+        onBack={onBack}
+        story={story}
+        keyword={keyword}
+        picture_url={picture_url}
+      />
     );
   } else {
     displayedElement = <Forms setStory={setStory} onSubmit={onSubmit} />;
@@ -49,9 +57,20 @@ const Dream_generator_main: React.FC = () => {
 
   return (
     <>
-      <h1>Dream Generator</h1>
+      <div className="h-screen flex items-center justify-center bg-gradient-to-br from-black to-blue-900">
+  <div className="max-w-md w-full p-4">
+    <div className="bg-blue-950 p-8 rounded-lg shadow-xl text-white">
+      <div className="text-center mb-6">
+        <h1 className="text-4xl font-bold tracking-wide mb-4 text-blue-300">Dream Generator</h1>
+        <div className="bg-blue-800 p-6 rounded-md text-blue-100 shadow-inner">
+          {displayedElement}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
-      {displayedElement}
+
     </>
   );
 };
