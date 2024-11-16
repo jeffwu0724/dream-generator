@@ -12,20 +12,40 @@ export class DreamGeneratorInfraStack extends cdk.Stack {
       compatibleRuntimes: [lambda.Runtime.PYTHON_3_11]
     });
 
-    const apiLambda = new lambda.Function(this, "ApiFunction", {
+    //dream list api
+    const dreamListApiLambda = new lambda.Function(this, "DreamListApiFunction", {
+      runtime: lambda.Runtime.PYTHON_3_11,
+      code: lambda.Code.fromAsset("../app/"),
+      handler:"DreamList_api.handler",
+      layers:[layer]
+    });
+
+    const dreamListApi = new apiGateway.RestApi(this, "DreamListRestApi", {
+      restApiName: "Dream List API"
+    });
+
+    const dreamListApiLambdaApiIntegration = new apiGateway.LambdaIntegration(dreamListApiLambda);
+    dreamListApi.root.addProxy({
+      defaultIntegration: dreamListApiLambdaApiIntegration
+    });
+
+    //dream generator api
+    const dreamGeneratorApiLambda = new lambda.Function(this, "DreamGeneratorApiFunction", {
       runtime: lambda.Runtime.PYTHON_3_11,
       code: lambda.Code.fromAsset("../app/"),
       handler:"DreamGenerator_api.handler",
       layers:[layer]
     });
 
-    const dreamGeneratorApi = new apiGateway.RestApi(this, "RestApi", {
+    const dreamGeneratorApi = new apiGateway.RestApi(this, "DreamGeneratorRestApi", {
       restApiName: "Dream Generator API"
     });
 
-    const lambdaApiIntegration = new apiGateway.LambdaIntegration(apiLambda);
+    const dreamGeneratorApiLambdaApiIntegration = new apiGateway.LambdaIntegration(dreamGeneratorApiLambda);
     dreamGeneratorApi.root.addProxy({
-      defaultIntegration: lambdaApiIntegration
+      defaultIntegration: dreamGeneratorApiLambdaApiIntegration
     });
+
+   
   }
 }
