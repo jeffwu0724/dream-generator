@@ -62,3 +62,6 @@ async def generate_keyword_story_and_picture_api(story:str):
     return {"keyword": keyword, "enriched_story" : enriched_story, "picture_url": picture_url}
 
 # fastapi dev DreamGenerator_api.py
+@app.get("/")
+async def root():
+    return {"message": "FastAPI ↔ DynamoDB Direct Access Example"}

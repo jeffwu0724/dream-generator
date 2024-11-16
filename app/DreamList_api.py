@@ -50,3 +50,8 @@ async def delete_dream_api(dream_id:str):
     response = await delete_dream(dream_id)
    
     return response
+
+
+@app.get("/")
+async def root():
+    return {"message": "FastAPI ↔ DynamoDB Direct Access Example"}
