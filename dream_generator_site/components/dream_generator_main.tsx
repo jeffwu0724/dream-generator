@@ -10,7 +10,7 @@ const Dream_generator_main: React.FC = () => {
   const [picture_url, setPictureUrl] = React.useState("");
   const [hasResult, setHasResult] = React.useState(false);
   const ENDPOINT: string =
-    "https://m8gmbpw6uc.execute-api.us-west-1.amazonaws.com/prod/generate_keyword_and_story";
+    "https://e8hwug3wkg.execute-api.us-west-1.amazonaws.com/prod/generate_keyword_and_story";
 
   const onSubmit = () => {
     fetch(`${ENDPOINT}?story=${story}`)
