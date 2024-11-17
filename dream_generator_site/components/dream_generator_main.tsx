@@ -2,6 +2,14 @@
 import React from "react";
 import Forms from "./form";
 import Results from "./results";
+import DreamList from "./dreamList";
+
+interface Dream {
+  dream_id: string;
+  keyword: string;
+  story: string;
+  picture_url?: string; // Optional since not all dreams may have a picture URL
+}
 
 const Dream_generator_main: React.FC = () => {
   const [story, setStory] = React.useState("");
@@ -9,6 +17,9 @@ const Dream_generator_main: React.FC = () => {
   const [enriched_story, setEnriched_stroy] = React.useState("");
   const [picture_url, setPictureUrl] = React.useState("");
   const [hasResult, setHasResult] = React.useState(false);
+  const [dreams, setDreams] = React.useState<Dream[]>([]); // Ensure it's always an array
+
+  const [hasList, setHasList] = React.useState(false);
 
   const GENERATOR_ENDPOINT: string =
     "https://e8hwug3wkg.execute-api.us-west-1.amazonaws.com/prod/generate_keyword_and_story";
@@ -42,7 +53,11 @@ const Dream_generator_main: React.FC = () => {
 
   const onDisplay = (data: any) => {
     // console.log()
-    console.log(data);
+    console.log(data.body);
+    console.log("??????????????????????")
+    // console.log(data.Items)
+    setDreams(data.body)
+    setHasList(true);
   };
 
 
@@ -51,6 +66,7 @@ const Dream_generator_main: React.FC = () => {
     setKeyword([]);
     setPictureUrl("");
     setHasResult(false);
+    setHasList(false);
   };
 
   let displayedElement = null;
@@ -65,7 +81,16 @@ const Dream_generator_main: React.FC = () => {
         picture_url={picture_url}
       />
     );
-  } else {
+  } 
+  else if(hasList){
+    displayedElement = (
+      <DreamList
+        dreams={dreams}
+        onBack={onBack}
+      />
+    );
+  }
+  else {
     displayedElement = <Forms setStory={setStory} onSubmit={onSubmit} onShowLists={onShowLists}/>;
   }
 
