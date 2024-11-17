@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from typing import List, Optional
-from DreamList import add_dream, edit_dream, fetch_dream, delete_dream
+from DreamList import add_dream, edit_dream, fetch_dream, fetch_dreams, delete_dream
 from mangum import Mangum
 from fastapi.middleware.cors import CORSMiddleware
 import json
@@ -42,6 +42,11 @@ async def fetch_dream_api(dream_id:str):
     print(f"dream_id: {dream_id}")
     response = await fetch_dream(dream_id)
    
+    return response
+
+@app.get("/fetch_dreams")
+async def fetch_dreams_api():
+    response = await fetch_dreams()
     return response
 
 @app.get("/delete_dream")

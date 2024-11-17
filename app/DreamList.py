@@ -68,6 +68,16 @@ async def fetch_dream(dream_id):
     else:
         return {"statusCode": 404, "body": "Dream not found"}
 
+async def fetch_dreams():
+    response = table.scan()
+    print(response)
+    # return {"statusCode": 404, "body": "Dream not found"}
+    items = response["Items"]
+    if items:
+        return {"statusCode": 200, "body": json.dumps(items)}
+    else:
+        return {"statusCode": 404, "body": "Dream not found"}
+    
 async def delete_dream(dream_id):
     table.delete_item(Key={"dream_id": dream_id})
     return {"statusCode": 200, "body": "Dream deleted"}
