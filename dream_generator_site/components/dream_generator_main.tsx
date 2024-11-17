@@ -9,11 +9,12 @@ const Dream_generator_main: React.FC = () => {
   const [enriched_story, setEnriched_stroy] = React.useState("");
   const [picture_url, setPictureUrl] = React.useState("");
   const [hasResult, setHasResult] = React.useState(false);
-  const ENDPOINT: string =
+
+  const GENERATOR_ENDPOINT: string =
     "https://e8hwug3wkg.execute-api.us-west-1.amazonaws.com/prod/generate_keyword_and_story";
 
   const onSubmit = () => {
-    fetch(`${ENDPOINT}?story=${story}`)
+    fetch(`${GENERATOR_ENDPOINT}?story=${story}`)
       .then((result) => result.json())
       .then(onResult);
   };
@@ -29,6 +30,21 @@ const Dream_generator_main: React.FC = () => {
     );
     setHasResult(true);
   };
+
+  const LIST_ENDPOINT: string =
+    "https://9081imoip0.execute-api.us-west-1.amazonaws.com/prod/fetch_dreams";
+
+  const onShowLists = () => {
+    fetch(`${LIST_ENDPOINT}`)
+      .then((result) => result.json())
+      .then(onDisplay);
+  };
+
+  const onDisplay = (data: any) => {
+    // console.log()
+    console.log(data);
+  };
+
 
   const onBack = () => {
     setStory("");
@@ -50,7 +66,7 @@ const Dream_generator_main: React.FC = () => {
       />
     );
   } else {
-    displayedElement = <Forms setStory={setStory} onSubmit={onSubmit} />;
+    displayedElement = <Forms setStory={setStory} onSubmit={onSubmit} onShowLists={onShowLists}/>;
   }
 
   //   console.log(story);
