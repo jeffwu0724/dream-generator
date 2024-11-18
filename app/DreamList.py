@@ -1,13 +1,17 @@
+import imghdr
 import boto3
 import os
 from uuid import uuid4
 import json
+import requests
 from dotenv import load_dotenv
 
 load_dotenv()
 
+s3_client = boto3.client('s3')
 # Prepare the DynamoDB client
 dynamodb = boto3.resource("dynamodb")
+s3 = boto3.resource("s3")
 # table_name = os.environ['TABLE_NAME']
 table = dynamodb.Table("generated_dream_table")
     
@@ -28,16 +32,45 @@ def lambda_handler(event, context):
 
 async def add_dream(request):
     dream_id = str(uuid4())
-    
+
+     # Prepare S3 image key and bucket name
+    image_key = f"dream-images/{dream_id}.png"
+    S3_BUCKET_NAME = "openai-generated-image"
+
+    # Fetch the image from the provided URL using requests
+    response = requests.get(request.picture_url, stream=True)
+    if response.status_code != 200:
+        raise Exception(f"Failed to fetch image: HTTP {request.picture_url}")
+    # image_type = imghdr.what(None, response.raw)
+
+    # Upload the image to S3
+    try:
+        bucket = s3.Bucket(S3_BUCKET_NAME)
+        bucket.upload_fileobj(
+            response.raw,
+            image_key,
+            # ExtraArgs={"ContentType": f"image/{image_type}"},
+            ExtraArgs={"ACL": "public-read"})
+        
+        s3_url = f"https://{S3_BUCKET_NAME}.s3.amazonaws.com/{image_key}"
+        print(f"Image uploaded to S3: {s3_url}")
+
+    except ClientError as e:
+        print(f"Error uploading to S3: {e}")
+        return {
+            "statusCode": 500,
+            "body": json.dumps({"error": "Failed to upload image to S3"})
+        }
+
     table.put_item(
         Item={
             "dream_id": dream_id,
             "keyword": request.keyword,
             "story": request.story,
-            "picture_url": request.picture_url
+            "picture_url": s3_url
         }
     )
-    return {"statusCode": 200, "body": json.dumps({"dream_id": dream_id})}
+    return {"statusCode": 200, "body": json.dumps({"dream_id": dream_id, "url" : s3_url})}
 
 async def edit_dream(dream_id, keyword=None, story=None, picture_url=None):
     update_expression = []
