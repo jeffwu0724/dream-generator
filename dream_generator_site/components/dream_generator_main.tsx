@@ -4,13 +4,6 @@ import Forms from "./form";
 import Results from "./results";
 import DreamList from "./dreamList";
 
-interface Dream {
-  dream_id: string;
-  keyword: string;
-  story: string;
-  picture_url?: string; // Optional since not all dreams may have a picture URL
-}
-
 const Dream_generator_main: React.FC = () => {
   const [story, setStory] = React.useState("");
   const [keyword, setKeyword] = React.useState([]);
@@ -78,21 +71,7 @@ const Dream_generator_main: React.FC = () => {
     );
 
     // fetch(`${Add_ENDPOINT}?keyword=${keyword}&story=${enriched_story}&picture_url=${picture_url}`)
-    
-    
-          const sanitizedKeyword = Array.isArray(keyword) 
-              ? keyword.join(", ").trim() 
-              : (keyword || "");
   
-          const sanitizedStory = (enriched_story || "").trim();
-          const sanitizedPictureUrl = (picture_url || "").trim();
-  
-          // Log payload to debug
-          console.log("Sending payload:", {
-              keyword: sanitizedKeyword,
-              story: sanitizedStory,
-              picture_url: sanitizedPictureUrl,
-          });
   
           const response = await fetch(Add_ENDPOINT, {
               method: 'POST',
