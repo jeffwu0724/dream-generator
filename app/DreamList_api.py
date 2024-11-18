@@ -4,6 +4,7 @@ from DreamList import add_dream, edit_dream, fetch_dream, fetch_dreams, delete_d
 from mangum import Mangum
 from fastapi.middleware.cors import CORSMiddleware
 import json
+from pydantic import BaseModel
 
 app = FastAPI()
 handler = Mangum(app)
@@ -16,15 +17,35 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+class DreamRequest(BaseModel):
+    keyword: str
+    story: str
+    picture_url: str
+
+# @app.post("/add_dream")
+# async def add_dream_api(keyword:str, story:str, picture_url:str):
+#     print(f"keyword: {keyword}")
+#     print(f"story: {story}")
+#     print(f"picture_url: {picture_url}")
+#     response = await add_dream(keyword, story, picture_url)
+   
+#     return response
 
 @app.post("/add_dream")
-async def add_dream_api(keyword:str, story:str, picture_url:str):
-    print(f"keyword: {keyword}")
-    print(f"story: {story}")
-    print(f"picture_url: {picture_url}")
-    response = await add_dream(keyword, story, picture_url)
-   
-    return response
+async def add_dream_api(request: DreamRequest):
+    try:
+        # Save to DynamoDB
+        # response = table.put_item(
+        #     Item={
+        #         "keyword": request.keyword,
+        #         "story": request.story,
+        #         "picture_url": request.picture_url,
+        #     }
+        # )
+        response = await add_dream(request)
+        return {"message": "Dream added successfully", "response": response}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 
 @app.get("/edit_dream")

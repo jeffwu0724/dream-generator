@@ -26,14 +26,15 @@ def lambda_handler(event, context):
     else:
         return {"statusCode": 400, "body": "Invalid operation"}
 
-async def add_dream(keyword, story, picture_url):
+async def add_dream(request):
     dream_id = str(uuid4())
+    
     table.put_item(
         Item={
             "dream_id": dream_id,
-            "keyword": keyword,
-            "story": story,
-            "picture_url": picture_url
+            "keyword": request.keyword,
+            "story": request.story,
+            "picture_url": request.picture_url
         }
     )
     return {"statusCode": 200, "body": json.dumps({"dream_id": dream_id})}

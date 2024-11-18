@@ -21,10 +21,10 @@ const Dream_generator_main: React.FC = () => {
 
   const [hasList, setHasList] = React.useState(false);
 
-  let temp_pic_url = "https://images.pexels.com/photos/20787/pexels-photo.jpg?auto=compress&cs=tinysrgb&h=350"
+  // let temp_pic_url = "https://images.pexels.com/photos/20787/pexels-photo.jpg?auto=compress&cs=tinysrgb&h=350"
 
   const GENERATOR_ENDPOINT: string =
-    "https://e8hwug3wkg.execute-api.us-west-1.amazonaws.com/prod/generate_keyword_and_story";
+    "https://e8hwug3wkg.execute-api.us-west-1.amazonaws.com/prod/generate_keyword_story_and_picture";
 
   const onSubmit = () => {
     fetch(`${GENERATOR_ENDPOINT}?story=${story}`)
@@ -33,14 +33,17 @@ const Dream_generator_main: React.FC = () => {
   };
 
   const onResult = (data: any) => {
-    // console.log()
+    console.log("@@@@@@@@@@@@@@@@@@@@@");
+    console.log(data);
     console.log(data.keyword);
     setKeyword(data.keyword);
     setEnriched_stroy(data.enriched_story);
-    // setPictureUrl(data.picture_url)
-    setPictureUrl(
-      temp_pic_url
-    );
+    console.log("+++++++++++++++++++++");
+    console.log(data.picture_url);
+    setPictureUrl(data.picture_url);
+    // setPictureUrl(
+    //   temp_pic_url
+    // );
     setHasResult(true);
   };
 
@@ -65,18 +68,56 @@ const Dream_generator_main: React.FC = () => {
   const Add_ENDPOINT: string =
     "https://9081imoip0.execute-api.us-west-1.amazonaws.com/prod/add_dream";
 
-  const onClickAdd = () => {
-    console.log(keyword)
-    console.log(story)
-    console.log(picture_url)
-    setPictureUrl(temp_pic_url)
-    console.log(`${Add_ENDPOINT}?keyword=${keyword}&story=${enriched_story}&picture_url=${picture_url}`)
-    
-    fetch(`${Add_ENDPOINT}?keyword=${keyword}&story=${enriched_story}&picture_url=${picture_url}`);
-      // .then((result) => result.json())
-      // .then(onAddDream);
-  };
+  const onClickAdd = async () => {
+    console.log(keyword);
+    console.log(story);
+    console.log(picture_url);
+    // setPictureUrl(temp_pic_url)
+    console.log(
+      `${Add_ENDPOINT}?keyword=${keyword}&story=${enriched_story}&picture_url=${picture_url}`
+    );
 
+    // fetch(`${Add_ENDPOINT}?keyword=${keyword}&story=${enriched_story}&picture_url=${picture_url}`)
+    
+    
+          const sanitizedKeyword = Array.isArray(keyword) 
+              ? keyword.join(", ").trim() 
+              : (keyword || "");
+  
+          const sanitizedStory = (enriched_story || "").trim();
+          const sanitizedPictureUrl = (picture_url || "").trim();
+  
+          // Log payload to debug
+          console.log("Sending payload:", {
+              keyword: sanitizedKeyword,
+              story: sanitizedStory,
+              picture_url: sanitizedPictureUrl,
+          });
+  
+          const response = await fetch(Add_ENDPOINT, {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                  keyword: keyword.join(", ").trim(),
+                  story: enriched_story.trim(),
+                  picture_url: picture_url.trim(),
+              }),
+          });
+  
+          if (!response.ok) {
+              const errorDetails = await response.json();
+              console.error("Error details:", errorDetails); // Log backend error details
+              throw new Error(`HTTP error! status: ${response.status}`);
+          }
+  
+          const data = await response.json();
+          console.log("Response:", data);
+          alert("Dream added successfully!");
+      
+  
+  };
 
   const onBack = () => {
     setStory("");

@@ -18,7 +18,7 @@ def main():
     enriched_story = dream_enriched_story_generator(user_input)
     dream_pic_url = dream_picture_generator(enriched_story)
     keyword = dream_keyword_generator(user_input)
-    # print(dream_pic_url)
+    print(dream_pic_url)
 
 # generate the stroy to describe the dream better based on the user input
 def dream_enriched_story_generator(story:str) -> str:
@@ -73,7 +73,9 @@ def dream_picture_generator(enriched_story:str):
         n=1
     )
 
-    # print(response.data[0].url)
+    picture_url = response.data[0].url
+    # print(picture_url)  # Debugging
+    return picture_url
 
 if __name__ == "__main__":
     main()
