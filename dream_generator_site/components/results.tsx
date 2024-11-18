@@ -4,6 +4,7 @@ interface ResultProps {
   enriched_story: string;
   picture_url: string;
   onBack: any;
+  onClickAdd: any;
 }
 const Results: React.FC<ResultProps> = (props) => {
   const keywordElements = [];
@@ -48,6 +49,13 @@ const Results: React.FC<ResultProps> = (props) => {
     className="w-full mt-4 p-2 rounded-md text-lg font-semibold text-white bg-gradient-to-r from-blue-600 to-blue-400 hover:from-blue-500 hover:to-blue-300 transition ease-in-out duration-200"
   >
     Back
+  </button>
+
+  <button 
+    onClick={props.onClickAdd} 
+    className="w-full mt-4 p-2 rounded-md text-lg font-semibold text-white bg-gradient-to-r from-blue-600 to-blue-400 hover:from-blue-500 hover:to-blue-300 transition ease-in-out duration-200"
+  >
+    Add to list
   </button>
 </div>
 

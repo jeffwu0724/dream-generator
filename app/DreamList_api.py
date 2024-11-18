@@ -17,7 +17,7 @@ app.add_middleware(
 )
 
 
-@app.get("/add_dream")
+@app.post("/add_dream")
 async def add_dream_api(keyword:str, story:str, picture_url:str):
     print(f"keyword: {keyword}")
     print(f"story: {story}")
