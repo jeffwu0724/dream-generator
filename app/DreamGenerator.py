@@ -8,7 +8,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 client = OpenAI()
-NUM_OF_TOKENS = 125
+NUM_OF_TOKENS = 60
 # get the user input as the short description of the dream
 def main():
     parser = argparse.ArgumentParser()
@@ -28,7 +28,7 @@ def dream_enriched_story_generator(story:str) -> str:
         messages=[
             {
                 "role": "user",
-                "content": f"Generate an enriched, detailed, creative story around {NUM_OF_TOKENS} words in the same language as this: {story}"
+                "content": f"Create a detailed and creative story around {NUM_OF_TOKENS} words, maintaining the same language as: {story}."
                 # "content": f"Please generate generated a enriched creative story in the same languge I enter here, below is my story: {story}"
             }
         ]
@@ -46,7 +46,7 @@ def dream_keyword_generator(story:str) -> List[str]:
         messages=[
             {
                 "role": "user",
-                "content": f"Can you please generate a few keywords based on the story {story}, and the keyword must be contained in the story and in the same language as the story"
+                "content": f"Generate keywords from {story} that appear in the story and match its language."
             }
         ]
     )
@@ -63,12 +63,12 @@ def dream_keyword_generator(story:str) -> List[str]:
     print(keyword_array)
     return keyword_array
 
-def dream_picture_generator(enriched_story:str):
+def dream_picture_generator(story:str):
     # print(enriched_story)
     response = client.images.generate(
-        model="dall-e-3",
-        prompt= f"Please generate a detailed picture based on my story: {enriched_story}",
-        size="1024x1024",
+        model="dall-e-2",
+        prompt= f"Please generate a oil painting based on my story: {story}",
+        size="512x512",
         quality="standard",
         n=1
     )

@@ -44,7 +44,7 @@ async def generate_keyword_api():
 @app.get("/generate_story_and_picture")
 async def generate_story_and_picture_api(story:str):
     enriched_story = dream_enriched_story_generator(story)
-    picture_url = dream_picture_generator(enriched_story)
+    picture_url = dream_picture_generator(story)
     return {"enriched_story" : enriched_story, "picture_url": picture_url}
 
 @app.get("/generate_keyword_and_story")
@@ -58,7 +58,7 @@ async def generate_keyword_and_story_api(story:str):
 async def generate_keyword_story_and_picture_api(story:str):
     keyword = dream_keyword_generator(story)
     enriched_story = dream_enriched_story_generator(story)
-    picture_url = dream_picture_generator(enriched_story)
+    picture_url = dream_picture_generator(story)
     return {"keyword": keyword, "enriched_story" : enriched_story, "picture_url": picture_url}
 
 # fastapi dev DreamGenerator_api.py
